@@ -101,12 +101,11 @@ export default function TutorProfilePage() {
         <form onSubmit={handleUpdate} className="space-y-8 bg-[#111] p-8 rounded-3xl border border-white/5 shadow-2xl">
           <div className="space-y-3">
             <label className="text-sm font-semibold flex items-center gap-2 text-slate-300">
-              <BookOpen size={18} className="text-blue-500" /> Professional Bio
+              <BookOpen size={18} className="text-blue-500" /> Professional Bio(Must Contain 25 Characters)
             </label>
             <textarea
               className="w-full bg-black/50 border border-white/10 rounded-2xl p-4 outline-none focus:border-blue-500 min-h-[120px] text-white"
               value={formData.bio}
-              placeholder="The bio must contain 25 characters."
               onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               required
             />
