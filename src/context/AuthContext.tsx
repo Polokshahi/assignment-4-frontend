@@ -89,12 +89,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 }
   };
 
-  const logout = () => {
-    Cookies.remove("token"); 
-    setUser(null);
-    router.push("/login");
-    toast.info("Logged out successfully");
-  };
+const logout = () => {
+
+  Cookies.remove("token"); 
+  
+  setUser(null);
+  
+  toast.info("Logged out successfully");
+
+  window.location.href = "/login";
+};
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
