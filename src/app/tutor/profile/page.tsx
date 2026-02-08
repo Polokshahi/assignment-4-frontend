@@ -106,6 +106,7 @@ export default function TutorProfilePage() {
             <textarea
               className="w-full bg-black/50 border border-white/10 rounded-2xl p-4 outline-none focus:border-blue-500 min-h-[120px] text-white"
               value={formData.bio}
+              placeholder="The bio must contain 25 characters."
               onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               required
             />
