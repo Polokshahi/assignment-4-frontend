@@ -69,7 +69,6 @@ export default function AdminDashboard() {
   return (
     <div className="mt-12 mb-10 space-y-8 max-w-7xl mx-auto px-4 md:px-0">
       
-      {/* Header Info */}
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">System Administration</h1>
         <p className="text-slate-500">Manage user access levels and platform security settings.</p>
