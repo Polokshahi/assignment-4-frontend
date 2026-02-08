@@ -4,17 +4,29 @@ import api from "@/lib/axios";
 import { Clock, CheckCircle, Calendar, User, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+
+interface Booking {
+  id: string;
+  status: string;
+  createdAt: string;
+  tutor?: {
+    user?: {
+      name: string;
+    };
+  };
+}
+
 export default function StudentDashboard() {
-  const [bookings, setBookings] = useState([]);
+
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMyBookings = async () => {
       try {
-        // স্টুডেন্টের নিজের বুকিংগুলো নিয়ে আসার এপিআই
         const { data } = await api.get("/bookings/my-bookings");
         setBookings(data.data || []);
-      } catch (err) {
+      } catch (err: unknown) {
         toast.error("Failed to load your bookings");
       } finally {
         setLoading(false);
@@ -37,7 +49,7 @@ export default function StudentDashboard() {
           <p className="text-slate-400 mt-2">Manage and track your learning sessions.</p>
         </div>
 
-        {bookings?.length === 0 ? (
+        {bookings.length === 0 ? (
           <div className="bg-[#111] border border-white/5 rounded-[2rem] p-12 text-center">
             <p className="text-slate-500 italic">You haven't booked any tutors yet.</p>
           </div>
@@ -55,8 +67,12 @@ export default function StudentDashboard() {
                   <div>
                     <h3 className="font-bold text-lg">{booking.tutor?.user?.name || "Expert Tutor"}</h3>
                     <div className="flex items-center gap-3 text-sm text-slate-500 mt-1">
-                      <span className="flex items-center gap-1"><Calendar size={14}/> {new Date(booking.createdAt).toLocaleDateString()}</span>
-                      <span className="flex items-center gap-1"><Clock size={14}/> 1 Hour Session</span>
+                      <span className="flex items-center gap-1">
+                        <Calendar size={14}/> {new Date(booking.createdAt).toLocaleDateString()}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock size={14}/> 1 Hour Session
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -68,7 +84,6 @@ export default function StudentDashboard() {
                     {booking.status === 'PENDING' ? <Clock size={14}/> : <CheckCircle size={14}/>}
                     {booking.status}
                   </div>
-                  {/* স্টুডেন্ট চাইলে এখানে রিভিউ বাটন দিতে পারো */}
                 </div>
               </div>
             ))}
