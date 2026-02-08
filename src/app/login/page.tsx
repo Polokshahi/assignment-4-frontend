@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useAuth } from '@/context/AuthContext';
+import { toast } from "sonner"; 
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -19,8 +20,12 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await login(formData);
-    } catch (error: any) {
-      alert(error.response?.data?.message || "Login failed");
+      toast.success("Login successful!");
+    } catch (error: unknown) {
+     
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      const message = axiosError.response?.data?.message || "Login failed";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -44,6 +49,7 @@ export default function LoginPage() {
                 type="email" 
                 placeholder="m@example.com" 
                 required 
+                value={formData.email} // Controlled input
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
@@ -53,15 +59,21 @@ export default function LoginPage() {
                 id="password" 
                 type="password" 
                 required 
+                value={formData.password} 
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
             <Button className="w-full" type="submit" disabled={isLoading}>
-              {isLoading ? "Logging in..." : "Login"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : "Login"}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
               Register here
             </Link>

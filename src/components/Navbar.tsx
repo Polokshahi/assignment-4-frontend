@@ -16,7 +16,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 z-[9999] w-full bg-black/90 backdrop-blur-md border-b border-white/10">
+    <nav className="fixed top-0 left-0 z-9999 w-full bg-black/90 backdrop-blur-md border-b border-white/10">
       <div className="relative mx-auto max-w-7xl w-full h-16 px-4 flex items-center">
 
 

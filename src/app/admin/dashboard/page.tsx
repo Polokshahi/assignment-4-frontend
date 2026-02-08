@@ -13,18 +13,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Loader2, UserX, UserCheck, Trash2, Mail, ShieldCheck, Users } from "lucide-react";
+import { Loader2, UserX, UserCheck, Mail, ShieldCheck, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// ১. ইউজারের জন্য ইন্টারফেস ডিফাইন করা
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: "ACTIVE" | "BANNED";
+}
+
 export default function AdminDashboard() {
-  const [users, setUsers] = useState<any[]>([]);
+
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
     try {
       const { data } = await api.get("/admin/users");
       setUsers(data.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error("Failed to fetch users");
     } finally {
       setLoading(false);
@@ -41,8 +51,9 @@ export default function AdminDashboard() {
       await api.patch(`/admin/users/${userId}/status`, { status: newStatus });
       toast.success(`User is now ${newStatus}`);
       fetchUsers();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      toast.error(axiosError.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -56,7 +67,6 @@ export default function AdminDashboard() {
   }
 
   return (
-    // mt-12 যোগ করা হয়েছে যাতে ডিজাইন ওপর থেকে একটু নিচে নামে
     <div className="mt-12 mb-10 space-y-8 max-w-7xl mx-auto px-4 md:px-0">
       
       {/* Header Info */}
@@ -67,7 +77,7 @@ export default function AdminDashboard() {
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="border-none shadow-md bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+        <Card className="border-none shadow-md bg-linear-to-br from-blue-600 to-indigo-700 text-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             <Users className="h-4 w-4 opacity-70" />
@@ -76,7 +86,7 @@ export default function AdminDashboard() {
             <div className="text-3xl font-bold">{users.length}</div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-md bg-white dark:bg-slate-900 border">
+        <Card className="border shadow-md bg-white dark:bg-slate-900">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Active</CardTitle>
             <UserCheck className="h-4 w-4 text-green-500" />
@@ -87,7 +97,7 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-md bg-white dark:bg-slate-900 border">
+        <Card className="border shadow-md bg-white dark:bg-slate-900">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Banned</CardTitle>
             <UserX className="h-4 w-4 text-red-500" />
@@ -101,7 +111,6 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Table Section */}
       <Card className="border-none shadow-xl bg-white dark:bg-slate-900 overflow-hidden">
         <CardHeader className="border-b bg-slate-50/50 dark:bg-slate-800/50 py-5">
           <CardTitle className="text-xl font-bold flex items-center gap-2">
@@ -112,10 +121,10 @@ export default function AdminDashboard() {
           <Table>
             <TableHeader className="bg-slate-100 dark:bg-slate-800">
               <TableRow>
-                <TableHead className="font-bold py-4 text-slate-700">Name & Email</TableHead>
-                <TableHead className="font-bold text-slate-700">Role</TableHead>
-                <TableHead className="font-bold text-slate-700">Status</TableHead>
-                <TableHead className="text-right font-bold pr-8 text-slate-700">Actions</TableHead>
+                <TableHead className="font-bold py-4 text-slate-700 dark:text-slate-300">Name & Email</TableHead>
+                <TableHead className="font-bold text-slate-700 dark:text-slate-300">Role</TableHead>
+                <TableHead className="font-bold text-slate-700 dark:text-slate-300">Status</TableHead>
+                <TableHead className="text-right font-bold pr-8 text-slate-700 dark:text-slate-300">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -136,16 +145,14 @@ export default function AdminDashboard() {
                   </TableCell>
                   <TableCell>
                     <Badge className={`rounded-full px-3 ${
-                      user.status === 'BANNED' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                      user.status === 'BANNED' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-green-100 text-green-700 border-green-200'
                     }`}>
                       {user.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right pr-8 space-x-3">
-                    {/* সরাসরি Ban এবং Unban বাটন */}
                     <Button
                       size="sm"
-                     
                       variant={user.status === "ACTIVE" ? "destructive" : "default"}
                       className="rounded-lg h-9 px-5 font-bold shadow-sm"
                       onClick={() => handleStatusChange(user.id, user.status)}

@@ -4,8 +4,25 @@ import api from "@/lib/axios";
 import { Loader2, Calendar, Clock, User, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
+
+interface Booking {
+  id: string;
+  date: string;
+  timeSlot: string;
+  status: string;
+  tutor: {
+    user: {
+      name: string;
+    };
+    category: {
+      name: string;
+    };
+  };
+}
+
 export default function MyBookingsPage() {
-  const [bookings, setBookings] = useState<any[]>([]);
+
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,7 +30,9 @@ export default function MyBookingsPage() {
       try {
         const { data } = await api.get("/bookings/my-bookings");
         setBookings(data.data);
-      } catch (error) {
+      } catch (error: unknown) {
+     
+        console.error(error);
         toast.error("Failed to load sessions");
       } finally {
         setLoading(false);
@@ -31,7 +50,7 @@ export default function MyBookingsPage() {
           <div className="flex justify-center py-20"><Loader2 className="animate-spin text-blue-500" size={40} /></div>
         ) : bookings.length === 0 ? (
           <div className="text-center py-20 bg-[#111] rounded-3xl border border-white/5">
-            <p className="text-slate-500">You haven't booked any sessions yet.</p>
+            <p className="text-slate-500">You haven&apos;t booked any sessions yet.</p>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -59,7 +78,11 @@ export default function MyBookingsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-green-500/10 text-green-500 px-4 py-2 rounded-xl text-xs font-bold border border-green-500/10">
+                  <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border ${
+                    booking.status === 'PENDING' 
+                    ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/10' 
+                    : 'bg-green-500/10 text-green-500 border-green-500/10'
+                  }`}>
                     <ShieldCheck size={14}/> {booking.status}
                   </div>
                 </div>

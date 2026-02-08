@@ -7,22 +7,41 @@ import { Search, Star, GraduationCap, Loader2, ArrowUpDown } from "lucide-react"
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+
+interface Availability {
+  date: string;
+  timeSlot: string;
+}
+
+interface Tutor {
+  id: string;
+  price: number;
+  bio?: string;
+  rating?: number;
+  availability?: Availability[];
+  user: {
+    name: string;
+  };
+  category: {
+    name: string;
+  };
+}
+
 export default function TutorBrowsingPage() {
-  const [tutors, setTutors] = useState<any[]>([]);
+
+  const [tutors, setTutors] = useState<Tutor[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("id");
   const [sortOrder, setSortOrder] = useState("desc");
   const [bookingId, setBookingId] = useState<string | null>(null);
 
-  // ডাটা ফোল করার ফাংশন (Search এবং Sort সহ)
   const fetchTutors = async () => {
     try {
       setLoading(true);
-      // ব্যাকএন্ড এপিআই-তে কুয়েরি প্যারামিটার পাঠানো হচ্ছে
       const { data } = await api.get(`/tutors?sortBy=${sortBy}&sortOrder=${sortOrder}`);
       setTutors(data.data);
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error("Failed to load tutors");
     } finally {
       setLoading(false);
@@ -31,9 +50,10 @@ export default function TutorBrowsingPage() {
 
   useEffect(() => {
     fetchTutors();
-  }, [sortBy, sortOrder]); // সর্টিং অপশন চেঞ্জ হলেই ডাটা আবার লোড হবে
+  }, [sortBy, sortOrder]);
 
-  const handleBooking = async (tutor: any) => {
+
+  const handleBooking = async (tutor: Tutor) => {
     try {
       if (!tutor.availability || tutor.availability.length === 0) {
         toast.error("No slots available.");
@@ -47,10 +67,19 @@ export default function TutorBrowsingPage() {
         timeSlot: firstSlot.timeSlot
       });
       toast.success("Booked successfully!");
-      setTutors((prev) => prev.map((t) => t.id === tutor.id ? { ...t, availability: [] } : t));
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Booking failed");
-    } finally {
+      
+      setTutors((prev) => 
+        prev.map((t) => t.id === tutor.id ? { ...t, availability: [] } : t)
+      );
+    } catch (error: unknown) {
+
+  const axiosError = error as { response?: { data?: { message?: string } } };
+  
+
+  const errorMessage = axiosError.response?.data?.message || "Booking failed";
+  
+  toast.error(errorMessage);
+} finally {
       setBookingId(null);
     }
   };
@@ -69,7 +98,6 @@ export default function TutorBrowsingPage() {
           <h1 className="text-4xl font-bold italic">Find Your <span className="text-blue-500">Expert Tutor</span></h1>
           
           <div className="flex flex-col md:flex-row w-full lg:w-auto gap-4">
-            {/* Search Bar */}
             <div className="flex w-full md:w-80 border border-white/10 rounded-full p-1 bg-white/5">
               <Input 
                 className="bg-transparent border-none focus-visible:ring-0 text-white"
@@ -79,14 +107,13 @@ export default function TutorBrowsingPage() {
               <Button className="rounded-full bg-blue-600 hover:bg-blue-700"><Search size={18}/></Button>
             </div>
 
-            {/* Sorting Dropdown */}
             <div className="flex gap-2">
               <Select onValueChange={(value) => {
                 const [field, order] = value.split("-");
                 setSortBy(field);
                 setSortOrder(order);
               }}>
-                <SelectTrigger className="w-[180px] bg-white/5 border-white/10 rounded-full text-white">
+                <SelectTrigger className="w-45 bg-white/5 border-white/10 rounded-full text-white">
                   <ArrowUpDown className="mr-2 h-4 w-4" />
                   <SelectValue placeholder="Sort By" />
                 </SelectTrigger>
@@ -138,7 +165,7 @@ export default function TutorBrowsingPage() {
                     </Button>
                   ) : (
                     <Button disabled className="bg-zinc-800 text-zinc-500 cursor-not-allowed rounded-xl px-6">Booked</Button>
-                  )}
+                  ) }
                 </div>
               </div>
             ))}

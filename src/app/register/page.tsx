@@ -19,7 +19,7 @@ export default function RegisterPage() {
     name: "",
     email: "",
     password: "",
-    role: "STUDENT", // Default role
+    role: "STUDENT", 
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,8 +30,10 @@ export default function RegisterPage() {
       await api.post("/auth/register", formData);
       toast.success("Registration successful! Please login.");
       router.push("/login");
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Something went wrong";
+    } catch (error: unknown) {
+      // TypeScript Error Fix: unknown টাইপ ব্যবহার করে টাইপ কাস্টিং করা হয়েছে
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      const message = axiosError.response?.data?.message || "Something went wrong";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -49,18 +51,17 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full Name */}
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
                 placeholder="John Doe"
                 required
+                value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
 
-            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -68,22 +69,22 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="name@example.com"
                 required
+                value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
                 required
+                value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               />
             </div>
 
-            {/* Role Selection */}
             <div className="space-y-2">
               <Label htmlFor="role">I want to join as a</Label>
               <Select 
@@ -100,7 +101,6 @@ export default function RegisterPage() {
               </Select>
             </div>
 
-            {/* Submit Button */}
             <Button className="w-full" type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? "Creating Account..." : "Register"}

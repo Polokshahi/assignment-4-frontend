@@ -1,14 +1,30 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
-export default function TutorCard({ tutor }: { tutor: any }) {
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link"; 
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+
+interface TutorProps {
+  tutor: {
+    userId: string;
+    bio: string;
+    price: number;
+    user: {
+      name: string;
+    };
+    category: {
+      name: string;
+    };
+  };
+}
+
+export default function TutorCard({ tutor }: TutorProps) {
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="text-xl font-bold">{tutor.user.name}</CardTitle>
+ 
           <Badge variant="secondary">{tutor.category.name}</Badge>
         </div>
       </CardHeader>

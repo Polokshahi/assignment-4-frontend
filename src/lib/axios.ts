@@ -1,13 +1,14 @@
 
 import Cookies from "js-cookie";
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
   baseURL: "http://localhost:7000/api",
 });
 
-api.interceptors.request.use((config : any) => {
-  const token = Cookies.get("token"); // কুকি থেকে টোকেন রিড
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+  const token = Cookies.get("token"); 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
