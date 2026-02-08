@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   title: "SkillBridge | Expert Tutoring Platform",
   description: "Learn from the best tutors worldwide.",
 };
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -25,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <LayoutHelper>{children}</LayoutHelper>
             <Toaster richColors position="top-center" />
           </AuthProvider>
+          
         </ThemeProvider>
       </body>
     </html>
