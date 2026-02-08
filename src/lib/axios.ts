@@ -3,7 +3,8 @@ import Cookies from "js-cookie";
 import axios, { InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
-  baseURL: "http://localhost:7000/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
 });
 
 api.interceptors.request.use(
