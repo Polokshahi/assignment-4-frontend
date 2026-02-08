@@ -23,7 +23,7 @@ export default function Navbar() {
 
 
         
-        {/* Logo */}
+
         <Link
           href="/"
           className="text-xl font-bold text-white italic whitespace-nowrap"
@@ -31,7 +31,7 @@ export default function Navbar() {
           Skill<span className="text-blue-500">Bridge</span>
         </Link>
 
-        {/* Desktop menu */}
+
         <div className="ml-auto hidden md:flex items-center gap-8 text-sm">
           <Link href="/#categories" className="text-slate-300 hover:text-white">
             Categories
@@ -40,7 +40,7 @@ export default function Navbar() {
             Find Tutors
           </Link>
 
-               {user?.role === 'TUTOR' && (
+              {user?.role === 'TUTOR' && (
   <Link href="/tutor/profile" className="text-slate-300 hover:text-white transition-colors">
     My Profile
   </Link>
@@ -87,7 +87,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+ 
       {isOpen && (
         <div className="md:hidden bg-black border-t border-white/10 px-6 py-6 flex flex-col gap-6 text-center">
           <Link href="/#categories" onClick={() => setIsOpen(false)} className="text-slate-300">

@@ -20,7 +20,7 @@ interface Booking {
 }
 
 export default function TutorDashboard() {
-  // ২. useState<Booking[]> ব্যবহার করে টাইপ ঠিক করা
+
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 

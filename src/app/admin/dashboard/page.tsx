@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Loader2, UserX, UserCheck, Mail, ShieldCheck, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// ১. ইউজারের জন্য ইন্টারফেস ডিফাইন করা
+
 interface User {
   id: string;
   name: string;
@@ -74,7 +74,7 @@ export default function AdminDashboard() {
         <p className="text-slate-500">Manage user access levels and platform security settings.</p>
       </div>
 
-      {/* Stats Section */}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="border-none shadow-md bg-linear-to-br from-blue-600 to-indigo-700 text-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
