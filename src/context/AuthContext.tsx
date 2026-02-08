@@ -97,7 +97,7 @@ const logout = () => {
   
   toast.info("Logged out successfully");
 
-  window.location.href = "/login";
+  window.location.href = "/";
 };
 
   return (
