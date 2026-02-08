@@ -1,11 +1,8 @@
 SkillBridge is a simple and modern web app that helps students find and book sessions with expert tutors. This repository contains the frontend built with Next.js and TypeScript.
 Project Links
 
-Live Site: (Vercel link)
+Live Site: https://assignment-4-frontend-six.vercel.app/
 
-Backend Repo: (GitHub backend link)
-
-Demo Video: (5–10 min walkthrough)
 
 Admin Login
 
