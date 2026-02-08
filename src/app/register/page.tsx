@@ -31,7 +31,7 @@ export default function RegisterPage() {
       toast.success("Registration successful! Please login.");
       router.push("/login");
     } catch (error: unknown) {
-      // TypeScript Error Fix: unknown টাইপ ব্যবহার করে টাইপ কাস্টিং করা হয়েছে
+   
       const axiosError = error as { response?: { data?: { message?: string } } };
       const message = axiosError.response?.data?.message || "Something went wrong";
       toast.error(message);

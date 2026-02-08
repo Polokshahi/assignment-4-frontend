@@ -49,7 +49,7 @@ export default function LoginPage() {
                 type="email" 
                 placeholder="m@example.com" 
                 required 
-                value={formData.email} // Controlled input
+                value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
